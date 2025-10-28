@@ -1,7 +1,8 @@
 const messageGenerate = async(email) => {
-    const text = `প্রিয় গ্রাহক\n
-    আপনার ${email} এর chat gpt এর subscription এর মেয়াদ আর মাত্র ২ দিন বাকি আছে।\n
-    renew করতে আমাদের সাথে যোগাযোগ করুন ।`
+    const text = `আসসালামু আলাইকুম\n
+    আপনার ${email} এর ChatGPT Plus subscription এর মেয়াদ আর মাত্র ২ দিন বাকি আছে।\n
+     আপনি কি renew করতে চাচ্ছেন ?\n
+    ধন্যবাদ`
     return text
 }
 
