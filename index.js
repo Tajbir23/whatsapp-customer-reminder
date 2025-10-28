@@ -8,6 +8,7 @@ const { subscriptionEndCustomer } = require('./handler/subscriptionEndCustomer')
 const { extractNumbers } = require('./handler/extractNumbers');
 const { reorganizeNumber } = require('./handler/reorganizeNumber');
 const { sendMessageToCustomer } = require('./handler/sendMessageToCustomer');
+const messageGenerate = require('./handler/messageGenerate');
 
 const sessions = ['6879125299b0bed604926bfd', '687911f899b0bed604926bfc']
 
@@ -27,11 +28,11 @@ for (const session of sessions) {
     
     client.on('ready', async() => {
         console.log('client is ready')
-        await userModel.findByIdAndUpdate(session, {isWhatsappLoggedIn: true, whatsappQr: null})
+        const user = await userModel.findByIdAndUpdate(session, {isWhatsappLoggedIn: true, whatsappQr: null})
         // const number = '8801763123739@c.us'
-        const message = 'Whatsapp login successful'
-        await client.sendMessage('8801763123739@c.us', message)
-        await client.sendMessage('8801317989828@c.us', message)
+        const confirmMessage = 'Whatsapp login successful'
+        await client.sendMessage(`${user.phone}@c.us`, confirmMessage)
+        
         // client.sendMessage(number, message)
         // client.sendMessage(number, message)
 
@@ -42,8 +43,8 @@ for (const session of sessions) {
                 const client = cilents[session]
                 if (client) {
                     const number = await reorganizeNumber(customerNumber.whatsapp)
-                    const customerMessage = await message(customerNumber.email)
-                    // await sendMessageToCustomer(client, number, customerMessage)
+                    const customerMessage = await messageGenerate(customerNumber.email)
+                    await sendMessageToCustomer(client, number, customerMessage)
                     
                     // randomly 1-3 মিনিট delay (60000ms = 1 minute)
                     const randomMinutes = Math.floor(Math.random() * 3) + 1; // 1 থেকে 3 এর মধ্যে
