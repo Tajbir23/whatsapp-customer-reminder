@@ -14,8 +14,12 @@ const subscriptionEndCustomer = async(adminId) => {
         twoDaysLaterEnd.setHours(23, 59, 59, 999); // 2 দিন পর শেষ
         
         // যাদের subscription 2 দিন পর end হবে
+        // user অথবা reference field এ adminId থাকলে খুঁজবে
         const customers = await customerModel.find({
-            user: adminId,
+            $or: [
+                { user: adminId },
+                { reference: adminId }
+            ],
             orderFrom: 'whatsapp',
             subscriptionEnd: {
                 $gte: twoDaysLater, // 2 দিন পর বা তার পরে
