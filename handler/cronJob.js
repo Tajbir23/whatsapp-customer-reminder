@@ -7,10 +7,15 @@ const messageGenerate = require('./messageGenerate')
 
 // Setup cron job for a session
 const setupCronJob = (session, cilents) => {
+    // Cron schedule: '0 0 * * *' means every day at 12:00 AM (midnight)
+    // Timezone: Asia/Dhaka (UTC+6)
     cron.schedule('0 0 * * *', async() => {
-        console.log('cron schedule is running')
+        const dhakaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })
+        console.log(`🕐 Cron job started at ${dhakaTime} (Dhaka Time) for session: ${session}`)
+        
         try {
             const customers = await subscriptionEndCustomer(session)
+            console.log(`📋 Found ${customers.length} customers with subscription ending in 2 days`)
             const customerNumbers = await extractNumbers(customers)
             
             for (const customerNumber of customerNumbers) {
@@ -48,9 +53,11 @@ const setupCronJob = (session, cilents) => {
         } catch (error) {
             console.error(`Cron job error for ${session}:`, error.message)
         }
+    }, {
+        timezone: 'Asia/Dhaka'
     })
     
-    console.log(`Cron job scheduled for session: ${session}`)
+    console.log(`✅ Cron job scheduled for session: ${session} (Every day at 12:00 AM Dhaka Time)`)
 }
 
 module.exports = { setupCronJob }
