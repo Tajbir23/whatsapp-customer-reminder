@@ -4,6 +4,7 @@ const { extractNumbers } = require('./extractNumbers')
 const { reorganizeNumber } = require('./reorganizeNumber')
 const { sendMessageToCustomer } = require('./sendMessageToCustomer')
 const subscriptionEndMessage = require('./subscriptionEndMessage')
+const randomTImeGenerate = require('./randomTimeGenerate')
 
 // Setup cron job for a session
 const setupCronJob = (session, cilents) => {
@@ -41,9 +42,7 @@ const setupCronJob = (session, cilents) => {
                     await sendMessageToCustomer(currentClient, number, customerMessage)
                     
                     // randomly 1-3 মিনিট delay (60000ms = 1 minute)
-                    const randomMinutes = Math.floor(Math.random() * 3) + 1
-                    const delayMs = randomMinutes * 60000
-                    console.log(`Waiting ${randomMinutes} minute(s) before next message...`)
+                    const delayMs = await randomTImeGenerate()
                     await new Promise(resolve => setTimeout(resolve, delayMs))
                 } catch (err) {
                     console.error(`Error sending message for ${session}:`, err.message)
