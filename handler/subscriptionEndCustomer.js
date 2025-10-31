@@ -3,15 +3,20 @@ const { customerModel } = require("../model/customerSchema")
 
 const subscriptionEndCustomer = async(adminId) => {
     try {
-        // আজকের তারিখ থেকে 2 দিন পর শুরু এবং শেষ সময়
-        const today = new Date();
-        today.setHours(0, 0, 0, 0); // আজকের শুরু
+        // Dhaka timezone (UTC+6) এ current date এবং time
+        const dhakaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })
+        const today = new Date(dhakaTime)
+        today.setHours(0, 0, 0, 0) // আজকের শুরু (Dhaka time)
         
-        const twoDaysLater = new Date(today);
-        twoDaysLater.setDate(today.getDate() + 2); // 2 দিন পর শুরু
+        console.log(`📅 Today in Dhaka: ${today.toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })}`)
         
-        const twoDaysLaterEnd = new Date(twoDaysLater);
-        twoDaysLaterEnd.setHours(23, 59, 59, 999); // 2 দিন পর শেষ
+        const twoDaysLater = new Date(today)
+        twoDaysLater.setDate(today.getDate() + 2) // 2 দিন পর শুরু
+        
+        const twoDaysLaterEnd = new Date(twoDaysLater)
+        twoDaysLaterEnd.setHours(23, 59, 59, 999) // 2 দিন পর শেষ
+        
+        console.log(`📅 Searching for subscriptions ending on: ${twoDaysLater.toLocaleDateString('en-US', { timeZone: 'Asia/Dhaka' })}`)
         
         // যাদের subscription 2 দিন পর end হবে
         // user অথবা reference field এ adminId থাকলে খুঁজবে

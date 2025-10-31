@@ -1,4 +1,4 @@
-const messageGenerate = async (email) => {
+const subscriptionEndMessage = async (email) => {
     const text = `আসসালামু আলাইকুম
 
 আপনার ${email} এর ChatGPT Plus subscription এর মেয়াদ আর মাত্র ২ দিন বাকি আছে।
@@ -9,4 +9,4 @@ const messageGenerate = async (email) => {
     return text
 }
 
-module.exports = messageGenerate
+module.exports = subscriptionEndMessage

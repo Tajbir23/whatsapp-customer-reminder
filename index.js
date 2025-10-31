@@ -3,9 +3,6 @@ const connectDatabase = require('./db/db')
 const { setupErrorHandlers } = require('./handler/errorHandler')
 const { initializeSession } = require('./handler/sessionManager')
 
-// Setup Socket.IO client (this will automatically connect and listen)
-require('./socket/socket_io')
-
 // Setup global error handlers
 setupErrorHandlers()
 
@@ -26,6 +23,10 @@ const initializeClients = async () => {
         // Wait a bit between sessions to avoid overwhelming the system
         await new Promise(resolve => setTimeout(resolve, 5000))
     }
+    
+    // Setup Socket.IO connection after clients are initialized
+    require('./socket/socket_io')
+    console.log('✅ All systems initialized')
 }
 
 // setTimeout(async () => {

@@ -1,5 +1,6 @@
 const { io } = require('socket.io-client')
 const baseUrl = require('../config/baseUrl')
+const remindOldCustomers = require('../handler/selectedCustomers/remindOldCustomers')
 
 // Create socket connection
 const socket = io(baseUrl, {
@@ -38,5 +39,9 @@ socket.on('message', (message) => {
     console.log('📨 Message from server:', message)
 })
 
+
+socket.on('remindOldCustomers', (adminId) => {
+    remindOldCustomers(adminId)
+})
 // Export socket for use in other modules
 module.exports = socket
