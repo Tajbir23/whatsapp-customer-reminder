@@ -3,6 +3,20 @@ const connectDatabase = require('./db/db')
 const { setupErrorHandlers } = require('./handler/errorHandler')
 const { initializeSession } = require('./handler/sessionManager')
 
+// Fix for Windows PowerShell QuickEdit Mode freeze issue
+if (process.platform === 'win32') {
+    const readline = require('readline')
+    if (process.stdin.isTTY) {
+        readline.emitKeypressEvents(process.stdin)
+        process.stdin.setRawMode(true)
+        process.stdin.on('keypress', (str, key) => {
+            if (key && key.ctrl && key.name === 'c') {
+                process.exit()
+            }
+        })
+    }
+}
+
 // Setup global error handlers
 setupErrorHandlers()
 
