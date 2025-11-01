@@ -9,7 +9,8 @@
     "pm2:stop": "pm2 stop whatsapp-reminder",
     "pm2:restart": "pm2 restart whatsapp-reminder",
     "pm2:logs": "pm2 logs whatsapp-reminder",
-    "pm2:delete": "pm2 delete whatsapp-reminder"
+    "pm2:delete": "pm2 delete whatsapp-reminder",
+    "pm2:watch": "pm2 watch index.js --name whatsapp-reminder"
   },
   "keywords": [],
   "author": "",
