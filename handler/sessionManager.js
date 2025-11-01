@@ -3,14 +3,14 @@ const whatsappConfig = require('../config/whatsappConfig')
 const { setupWhatsappEvents } = require('./whatsappEvents')
 
 // Initialize a single WhatsApp session
-const initializeSession = async (session, cilents) => {
+const initializeSession = async (session, cilents, admin) => {
     const client = new Client({
         authStrategy: new LocalAuth({clientId: session}),
         puppeteer: whatsappConfig.puppeteer
     })
 
     // Setup all event handlers
-    setupWhatsappEvents(client, session, cilents)
+    setupWhatsappEvents(client, session, cilents, admin)
 
     // Initialize the client
     client.initialize()

@@ -4,12 +4,12 @@ const { reorganizeNumber } = require('./reorganizeNumber')
 const { setupCronJob } = require('./cronJob')
 
 // Setup all WhatsApp client events
-const setupWhatsappEvents = (client, session, cilents) => {
+const setupWhatsappEvents = (client, session, cilents, admin) => {
     
     // QR Code event
     client.on('qr', async(qr) => {
         try {
-            console.log(`QR code generated for ${session}`)
+            console.log(`QR code generated for ${admin}`)
             qrcode.generate(qr, {small: true})
             await userModel.findByIdAndUpdate(session, {whatsappQr: qr, isWhatsappLoggedIn: false})
         } catch (error) {
@@ -46,7 +46,7 @@ const setupWhatsappEvents = (client, session, cilents) => {
 
         console.log("setup done whatsapp event")
         // Setup cron job
-        setupCronJob(session, cilents)
+        setupCronJob(session, cilents, admin)
     })
 
     // Authenticated event

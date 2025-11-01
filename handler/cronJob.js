@@ -5,14 +5,19 @@ const { reorganizeNumber } = require('./reorganizeNumber')
 const { sendMessageToCustomer } = require('./sendMessageToCustomer')
 const subscriptionEndMessage = require('./subscriptionEndMessage')
 const randomTImeGenerate = require('./randomTimeGenerate')
+const sendInvalidCustomerToAdmin = require('./admin/sendInvalidCustomerToAdmin')
+
 
 // Setup cron job for a session
-const setupCronJob = (session, cilents) => {
+const setupCronJob = (session, cilents, admin) => {
     // Cron schedule: '0 0 * * *' means every day at 12:00 AM (midnight)
     // Timezone: Asia/Dhaka (UTC+6)
     cron.schedule('0 0 * * *', async() => {
+
+        
+        
         const dhakaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })
-        console.log(`🕐 Cron job started at ${dhakaTime} (Dhaka Time) for session: ${session}`)
+        console.log(`🕐 Cron job started at ${dhakaTime} (Dhaka Time) for admin: ${admin}`)
         
         try {
             const customers = await subscriptionEndCustomer(session)
@@ -22,21 +27,21 @@ const setupCronJob = (session, cilents) => {
             for (const customerNumber of customerNumbers) {
                 const currentClient = cilents[session]
                 
-                // Check if client exists and is ready
-                if (!currentClient) {
-                    console.log(`Client ${session} is not available. Skipping message.`)
+                // check number valid or not
+                if (!customerNumber.whatsapp) {
+                    console.log(`Customer number is not valid. Skipping message.`)
                     break
                 }
+
+                
                 
                 try {
-                    // Check if client state is valid before sending
-                    const state = await currentClient.getState()
-                    if (state !== 'CONNECTED') {
-                        console.log(`Client ${session} is not connected (${state}). Skipping message.`)
-                        break
-                    }
-                    
                     const number = await reorganizeNumber(customerNumber.whatsapp)
+
+                    if(!number){
+                        await sendInvalidCustomerToAdmin(currentClient, admin, `Customer number ${customerNumber.whatsapp} is not valid. And his email is ${customerNumber.email}`)
+                        continue
+                    }
                     // const number = await reorganizeNumber('+8801560031203')
                     const customerMessage = await subscriptionEndMessage(customerNumber.email)
                     await sendMessageToCustomer(currentClient, number, customerMessage)

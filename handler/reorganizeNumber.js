@@ -23,7 +23,7 @@ const reorganizeNumber = (number) => {
         return cleanedNumber + '@c.us';
     } catch (error) {
         console.log(error);
-        return number + '@c.us';
+        return false
     }
 }
 

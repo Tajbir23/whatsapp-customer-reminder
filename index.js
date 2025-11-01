@@ -22,18 +22,24 @@ setupErrorHandlers()
 
 // Sessions to initialize
 const sessions = ['6879125299b0bed604926bfd', '687911f899b0bed604926bfc']
-
+const admins = {
+    '6879125299b0bed604926bfd': '8801763123739@c.us',
+    '6879125299b0bed604926bfd': '8801317989828@c.us'
+}
 // Store all WhatsApp clients
 const cilents = {}
 
 // Initialize all WhatsApp clients
 const initializeClients = async () => {
+    
     // First connect to database
     await connectDatabase()
 
     // Then initialize WhatsApp clients one by one
     for (const session of sessions) {
-        await initializeSession(session, cilents)
+        const admin = admins[session]
+        
+        await initializeSession(session, cilents, admin)
         // Wait a bit between sessions to avoid overwhelming the system
         await new Promise(resolve => setTimeout(resolve, 5000))
     }
@@ -60,4 +66,4 @@ initializeClients().catch(error => {
 })
 
 // Export clients for external use
-module.exports = { cilents }
+module.exports = { cilents, admins }
