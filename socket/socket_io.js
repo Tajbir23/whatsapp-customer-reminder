@@ -25,7 +25,12 @@ socket.on('remindOldCustomers', (adminId) => {
     remindOldCustomers(adminId)
 })
 
-socket.on('messageForReview', (adminId, pageUrl) => {
+socket.on('messageForReview', (payload) => {
+    const { adminId, pageUrl } = payload
+    if(!adminId || !pageUrl){
+        console.log('Invalid payload')
+        return
+    }
     messageForReview(adminId, pageUrl)
 })
 // Export socket for use in other modules
