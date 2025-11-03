@@ -1,13 +1,23 @@
 const { customerModel } = require("../../model/customerSchema")
+const mongoose = require('mongoose')
 
 const getCustomers = async(adminId) => {
     try {
+        // Convert string to ObjectId if needed
+        const adminObjectId = mongoose.Types.ObjectId.isValid(adminId) 
+            ? new mongoose.Types.ObjectId(adminId) 
+            : adminId
+        
+        console.log('Searching for customers with adminId:', adminObjectId)
+        
         const customers = await customerModel.aggregate([
             {
                 $match: {
-                    user: adminId,
-                    orderFrom: 'whatsapp',
-                    waOrFbId: { $ne: null }
+                    $or: [
+                        { user: adminObjectId },
+                        { reference: adminObjectId }
+                    ],
+                    orderFrom: 'whatsapp'
                 }
             },
             {
@@ -20,9 +30,11 @@ const getCustomers = async(adminId) => {
                 $replaceRoot: { newRoot: '$customer' }
             }
         ])
+        
+        console.log(`Found ${customers.length} unique customers`)
         return customers
     } catch (error) {
-        console.log(error)
+        console.error('Error in getCustomers:', error)
         return []
     }
 }
