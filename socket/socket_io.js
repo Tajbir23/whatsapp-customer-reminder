@@ -26,6 +26,7 @@ socket.on('remindOldCustomers', (adminId) => {
 })
 
 socket.on('messageForReview', (payload) => {
+    console.log('messageForReview', payload)
     const { adminId, pageUrl } = payload
     if(!adminId || !pageUrl){
         console.log('Invalid payload')

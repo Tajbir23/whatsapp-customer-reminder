@@ -73,25 +73,20 @@ const setupWhatsappEvents = (client, session, cilents, admin) => {
     client.on('disconnected', async(reason) => {
         console.log(`${session} disconnected:`, reason)
         
-        // Immediately mark client as null to prevent any operations
-        cilents[session] = null
-        
         try {
             await userModel.findByIdAndUpdate(session, {isWhatsappLoggedIn: false, whatsappQr: null})
         } catch (error) {
             console.error(`Error handling disconnection for ${session}:`, error.message)
         }
         
+        // Mark client as null to prevent any operations
+        cilents[session] = null
+        
         // If logged out manually, don't try to reconnect
         if (reason === 'LOGOUT') {
-            const currentClient = cilents[session]
-            currentClient.destroy()
-            cilents[session] = null
-            console.log(`${session} was logged out manually. Not attempting to reconnect.`)
-            return
-        }else{
-            console.log(`${session} was disconnected. Attempting to reconnect.`)
-            currentClient.initialize()
+            console.log(`${session} was logged out manually. Client cleaned up.`)
+        } else {
+            console.log(`${session} was disconnected. Client cleaned up.`)
         }
     })
 
