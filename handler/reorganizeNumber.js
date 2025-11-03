@@ -1,7 +1,32 @@
 const reorganizeNumber = (number) => {
+    console.log('reorganizeNumber', number)
     try {
+        // Check if number exists and is a valid type
+        if (!number || typeof number !== 'string') {
+            console.log('⚠️ Invalid input: number is required and must be a string');
+            return false;
+        }
+        
         // সব special characters remove করা (+, -, space, etc.)
         let cleanedNumber = number.replace(/[\s\-\+\(\)]/g, '');
+        
+        // Check if cleaned number contains only digits (0-9)
+        if (!/^\d+$/.test(cleanedNumber)) {
+            console.log(`⚠️ Invalid phone number: "${number}" contains non-numeric characters`);
+            return false;
+        }
+        
+        // Check minimum length (at least 10 digits for international numbers)
+        if (cleanedNumber.length < 10) {
+            console.log(`⚠️ Invalid phone number: "${number}" is too short (minimum 10 digits)`);
+            return false;
+        }
+        
+        // Check maximum length (maximum 15 digits for international numbers)
+        if (cleanedNumber.length > 15) {
+            console.log(`⚠️ Invalid phone number: "${number}" is too long (maximum 15 digits)`);
+            return false;
+        }
         
         // যদি নাম্বার 0 দিয়ে শুরু হয় এবং 11 digit হয় (বাংলাদেশী নাম্বার)
         if (cleanedNumber.startsWith('0') && cleanedNumber.length === 11) {
@@ -22,8 +47,8 @@ const reorganizeNumber = (number) => {
         // WhatsApp format এ return করা
         return cleanedNumber + '@c.us';
     } catch (error) {
-        console.log(error);
-        return false
+        console.error('Error in reorganizeNumber:', error.message);
+        return false;
     }
 }
 

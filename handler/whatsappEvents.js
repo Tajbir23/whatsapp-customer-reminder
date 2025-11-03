@@ -84,8 +84,14 @@ const setupWhatsappEvents = (client, session, cilents, admin) => {
         
         // If logged out manually, don't try to reconnect
         if (reason === 'LOGOUT') {
+            const currentClient = cilents[session]
+            currentClient.destroy()
+            cilents[session] = null
             console.log(`${session} was logged out manually. Not attempting to reconnect.`)
             return
+        }else{
+            console.log(`${session} was disconnected. Attempting to reconnect.`)
+            currentClient.initialize()
         }
     })
 
