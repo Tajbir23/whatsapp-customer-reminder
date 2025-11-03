@@ -5,8 +5,8 @@ const { reorganizeNumber } = require("./reorganizeNumber")
 const getCustomers = require("./selectedCustomers/getCustomers")
 const sendCustomMessage = require("./sendCustomeMessage")
 
-const messageForReview = async(adminId, pageUrl) => {
-    console.log('messageForReview', adminId, pageUrl)
+const messageForReview = async(adminId) => {
+    console.log('messageForReview', adminId)
     try {
         const currentClient = cilents[adminId]
         const state = await currentClient.getState()
@@ -19,7 +19,7 @@ const messageForReview = async(adminId, pageUrl) => {
             return
         }
 
-        const message = await requestReviewMessage(pageUrl)
+        const message = await requestReviewMessage()
 
         const customers = await getCustomers(adminId)
 

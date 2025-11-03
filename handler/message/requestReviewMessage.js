@@ -1,4 +1,4 @@
-const requestReviewMessage = (pageUrl) => {
+const requestReviewMessage = () => {
     return `আসসালামুয়ালাইকুম ভাই\n
     আমাদের service আপনার কাছে কেমন লাগছে ?`
 }
