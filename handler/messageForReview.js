@@ -1,11 +1,12 @@
 const { cilents } = require("..")
+const requestReviewMessage = require("./message/requestReviewMessage")
 const randomTImeGenerate = require("./randomTimeGenerate")
 const { reorganizeNumber } = require("./reorganizeNumber")
 const getCustomers = require("./selectedCustomers/getCustomers")
 const sendCustomMessage = require("./sendCustomeMessage")
 
-const messageForReview = async(adminId, message) => {
-    console.log('messageForReview', adminId, message)
+const messageForReview = async(adminId, pageUrl) => {
+    console.log('messageForReview', adminId, pageUrl)
     try {
         const currentClient = cilents[adminId]
         const state = await currentClient.getState()
@@ -17,6 +18,8 @@ const messageForReview = async(adminId, message) => {
             console.log(`Client ${adminId} is not available. Skipping message.`)
             return
         }
+
+        const message = await requestReviewMessage(pageUrl)
 
         const customers = await getCustomers(adminId)
 

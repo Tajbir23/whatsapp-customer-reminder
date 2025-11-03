@@ -25,8 +25,8 @@ socket.on('remindOldCustomers', (adminId) => {
     remindOldCustomers(adminId)
 })
 
-socket.on('messageForReview', (adminId, message) => {
-    messageForReview(adminId, message)
+socket.on('messageForReview', (adminId, pageUrl) => {
+    messageForReview(adminId, pageUrl)
 })
 // Export socket for use in other modules
 module.exports = socket
