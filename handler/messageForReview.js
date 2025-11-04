@@ -29,7 +29,7 @@ const messageForReview = async(adminId) => {
                 console.log(`Customer number is not valid. Skipping message.`)
                 continue
             }
-            await sendCustomMessage(currentClient, '8801763123739@c.us', message)
+            await sendCustomMessage(currentClient, number, message)
             console.log(`Message sent successfully to ${number}`)
             const delayMs = await randomTImeGenerate()
             await new Promise(resolve => setTimeout(resolve, delayMs))
