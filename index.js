@@ -24,7 +24,7 @@ setupErrorHandlers()
 const sessions = ['6879125299b0bed604926bfd', '687911f899b0bed604926bfc']
 const admins = {
     '6879125299b0bed604926bfd': '8801763123739@c.us',
-    '6879125299b0bed604926bfd': '8801317989828@c.us'
+    '687911f899b0bed604926bfc': '8801317989828@c.us'
 }
 // Store all WhatsApp clients
 const cilents = {}

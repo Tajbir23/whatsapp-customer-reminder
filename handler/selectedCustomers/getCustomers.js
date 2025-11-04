@@ -34,7 +34,7 @@ const getCustomers = async(adminId) => {
         console.log(`Found ${customers.length} unique customers`)
         return customers
     } catch (error) {
-        console.error('Error in getCustomers:', error)
+        console.error('Error in getCustomers:', error.message)
         return []
     }
 }
