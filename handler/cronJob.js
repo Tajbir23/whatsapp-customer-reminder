@@ -12,9 +12,8 @@ const sendInvalidCustomerToAdmin = require('./admin/sendInvalidCustomerToAdmin')
 const setupCronJob = (session, cilents, admin) => {
     // Cron schedule: '0 0 * * *' means every day at 12:00 AM (midnight)
     // Timezone: Asia/Dhaka (UTC+6)
-    cron.schedule('0 0 * * *', async() => {
-
-        
+    cron.schedule('0 2 * * *', async() => {
+   
         
         const dhakaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })
         console.log(`🕐 Cron job started at ${dhakaTime} (Dhaka Time) for admin: ${admin}`)
