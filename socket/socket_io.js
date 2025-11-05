@@ -3,11 +3,14 @@ const baseUrl = require('../config/baseUrl')
 const remindOldCustomers = require('../handler/selectedCustomers/remindOldCustomers')
 const messageForReview = require('../handler/messageForReview')
 
-// Create socket connection
+// Create socket connection with better configuration
 const socket = io(baseUrl, {
     reconnection: true,
-    reconnectionDelay: 1000,
-    reconnectionAttempts: 10
+    reconnectionDelay: 2000,
+    reconnectionDelayMax: 10000,
+    reconnectionAttempts: Infinity,
+    timeout: 20000,
+    transports: ['websocket', 'polling']
 })
 
 // Connection events

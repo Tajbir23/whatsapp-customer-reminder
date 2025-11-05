@@ -32,20 +32,33 @@ const messageForReview = async(adminId) => {
         console.log("get customers")
         const customers = await getCustomers(adminId)
 
-        console.log("for loop start")
+        console.log(`📋 Starting to send messages to ${customers.length} customers`)
+        
         for (const customer of customers) {
-            console.log("reorganize number")
-            const number = await reorganizeNumber('Nothing')
-            if(!number){
-                console.log(`Customer number is not valid. Skipping message.`)
-                await sendInvalidCustomerToAdmin(currentClient, '8801763123739@c.us', `Customer number ${customer.waOrFbId} is not valid. And his email is ${customer.email}`)
+            // Check if customer has valid waOrFbId
+            if (!customer.waOrFbId) {
+                console.log(`⚠️ Skipping ${customer.email} - No WhatsApp number`)
                 continue
             }
+            
+            console.log(`📞 Processing customer: ${customer.email}`)
+            const number = await reorganizeNumber(customer.waOrFbId)
+            
+            if (!number) {
+                console.log(`❌ Invalid number for ${customer.email}: ${customer.waOrFbId}`)
+                await sendInvalidCustomerToAdmin(currentClient, '8801763123739@c.us', `Customer number ${customer.waOrFbId} is not valid. Email: ${customer.email}`)
+                continue
+            }
+            
             await sendCustomMessage(currentClient, number, message)
-            console.log(`Message sent successfully to ${number}`)
+            console.log(`✅ Message sent successfully to ${customer.email} (${number})`)
+            
             const delayMs = await randomTImeGenerate()
+            console.log(`⏳ Waiting ${Math.floor(delayMs/1000)}s before next message...`)
             await new Promise(resolve => setTimeout(resolve, delayMs))
         }
+        
+        console.log(`✅ Completed sending messages to all customers`)
     } catch (error) {
         console.log(error.message)
         
