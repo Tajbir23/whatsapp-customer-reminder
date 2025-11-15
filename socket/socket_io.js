@@ -2,6 +2,7 @@ const { io } = require('socket.io-client')
 const baseUrl = require('../config/baseUrl')
 const remindOldCustomers = require('../handler/selectedCustomers/remindOldCustomers')
 const messageForReview = require('../handler/messageForReview')
+const sendSubscriptionEndMessage = require('../handler/subscription/sendSubscriptionEndMessage')
 
 // Create socket connection with better configuration
 const socket = io(baseUrl, {
@@ -35,6 +36,11 @@ socket.on('messageForReview', (adminId) => {
         return
     }
     messageForReview(adminId)
+})
+
+socket.on('subscriptionEndMessage', async(data) => {
+    const {adminId, customerNumber, email} = data
+    await sendSubscriptionEndMessage(adminId, customerNumber, email)
 })
 
 // Export socket for use in other modules

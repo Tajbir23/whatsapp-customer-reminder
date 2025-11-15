@@ -3,7 +3,7 @@ const { subscriptionEndCustomer } = require('./subscriptionEndCustomer')
 const { extractNumbers } = require('./extractNumbers')
 const { reorganizeNumber } = require('./reorganizeNumber')
 const { sendMessageToCustomer } = require('./sendMessageToCustomer')
-const subscriptionEndMessage = require('./subscriptionEndMessage')
+const subscriptionReminderEndMessage = require('./subscription/subscriptionReminderEndMessage')
 const randomTImeGenerate = require('./randomTimeGenerate')
 const sendInvalidCustomerToAdmin = require('./admin/sendInvalidCustomerToAdmin')
 
@@ -42,7 +42,7 @@ const setupCronJob = (session, cilents, admin) => {
                         continue
                     }
                     // const number = await reorganizeNumber('+8801560031203')
-                    const customerMessage = await subscriptionEndMessage(customerNumber.email)
+                    const customerMessage = await subscriptionReminderEndMessage(customerNumber.email)
                     await sendMessageToCustomer(currentClient, number, customerMessage)
                     
                     // randomly 1-3 মিনিট delay (60000ms = 1 minute)
