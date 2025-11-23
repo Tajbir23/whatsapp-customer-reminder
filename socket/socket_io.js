@@ -42,6 +42,7 @@ socket.on('messageForReview', (adminId) => {
 socket.on('subscriptionEndMessage', async(data) => {
     const {adminId, customerNumber, email} = data
 
+    console.log("sending subscription end message to", adminId, customerNumber, email)
     const number = await reorganizeNumber(customerNumber)
     await sendSubscriptionEndMessage(adminId, number, email)
 })
