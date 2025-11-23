@@ -1,4 +1,5 @@
-const { customerModel } = require("../model/customerSchema")
+const { customerModel } = require("../../model/customerSchema")
+
 
 
 const subscriptionEndCustomer = async(adminId) => {
