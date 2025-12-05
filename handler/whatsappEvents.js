@@ -36,9 +36,9 @@ const setupWhatsappEvents = (client, session, cilents, admin) => {
             const user = await userModel.findById(session)
             if (user && user.phone) {
                 const phoneNumber = await reorganizeNumber(user.phone)
-                const confirmMessage = `Whatsapp login successful\n
+                const confirmMessage = `Whatsapp login successful
                 
-                *This is an automated message*`
+                _*This is an automated message*_`
                 await client.sendMessage(phoneNumber, confirmMessage)
                 console.log(`Confirmation message sent to ${user.phone}`)
             }
