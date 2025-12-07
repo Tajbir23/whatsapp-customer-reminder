@@ -16,8 +16,7 @@ const getCustomers = async(adminId) => {
                     $or: [
                         { user: adminObjectId },
                         { reference: adminObjectId }
-                    ],
-                    orderFrom: 'whatsapp'
+                    ]
                 }
             },
             {
