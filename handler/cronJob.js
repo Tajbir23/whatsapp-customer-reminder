@@ -15,7 +15,7 @@ const setupCronJob = (session, cilents, admin) => {
   // Cron schedule: '0 1 * * *' means every day at 1:00 AM
   // Timezone: Asia/Dhaka (UTC+6)
   cron.schedule(
-    "0 1 * * *",
+    "15 1 * * *",
     async () => {
       const dhakaTime = new Date().toLocaleString("en-US", {
         timeZone: "Asia/Dhaka",
@@ -70,6 +70,7 @@ const setupCronJob = (session, cilents, admin) => {
       }
     },
     {
+      scheduled: true,
       timezone: "Asia/Dhaka",
     }
   );
