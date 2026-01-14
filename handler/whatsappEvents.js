@@ -5,45 +5,63 @@ const { setupCronJob } = require('./cronJob')
 
 // Setup all WhatsApp client events
 const setupWhatsappEvents = (client, session, cilents, admin) => {
-    
+
     // QR Code event
-    client.on('qr', async(qr) => {
+    client.on('qr', async (qr) => {
         try {
             console.log(`QR code generated for ${admin}`)
-            qrcode.generate(qr, {small: true})
-            await userModel.findByIdAndUpdate(session, {whatsappQr: qr, isWhatsappLoggedIn: false})
+            qrcode.generate(qr, { small: true })
+            await userModel.findByIdAndUpdate(session, { whatsappQr: qr, isWhatsappLoggedIn: false })
         } catch (error) {
             console.error(`Error handling QR for ${session}:`, error.message)
         }
     })
-    
+
     // Ready event
-    client.on('ready', async() => {
+    client.on('ready', async () => {
         console.log(`${session} client is ready`)
-        
+
         // Update database first
         try {
-            await userModel.findByIdAndUpdate(session, {isWhatsappLoggedIn: true, whatsappQr: null})
+            await userModel.findByIdAndUpdate(session, { isWhatsappLoggedIn: true, whatsappQr: null })
         } catch (error) {
             console.error(`Error updating database for ${session}:`, error.message)
         }
-        
+
         // Wait a bit for client to fully initialize before sending messages
         await new Promise(resolve => setTimeout(resolve, 3000))
-        
+
         // Send confirmation message
         try {
             const user = await userModel.findById(session)
             if (user && user.phone) {
-                const phoneNumber = await reorganizeNumber(user.phone)
+                const phoneNumber = reorganizeNumber(user.phone)
+
+                // Check if phone number is valid
+                if (!phoneNumber) {
+                    console.log(`⚠️ Invalid phone number for ${session}`)
+                    return
+                }
+
+                // Check if number is registered on WhatsApp
+                const isRegistered = await client.getNumberId(phoneNumber.replace('@c.us', ''))
+                if (!isRegistered) {
+                    console.log(`⚠️ Phone number ${user.phone} is not registered on WhatsApp`)
+                    return
+                }
+
+                // Wait a bit more for full initialization
+                await new Promise(resolve => setTimeout(resolve, 2000))
+
                 const confirmMessage = `Whatsapp login successful
                 
                 _*This is an automated message*_`
-                await client.sendMessage(phoneNumber, confirmMessage)
+                await client.sendMessage(phoneNumber, confirmMessage, { sendSeen: false })
                 console.log(`Confirmation message sent to ${user.phone}`)
             }
         } catch (error) {
             console.error(`Error sending confirmation message for ${session}:`, error.message)
+            // Don't throw, just log the error
         }
 
         console.log("setup done whatsapp event")
@@ -52,38 +70,38 @@ const setupWhatsappEvents = (client, session, cilents, admin) => {
     })
 
     // Authenticated event
-    client.on('authenticated', async() => {
+    client.on('authenticated', async () => {
         console.log(`${session} authenticated successfully`)
         try {
-            await userModel.findByIdAndUpdate(session, {isWhatsappLoggedIn: true})
+            await userModel.findByIdAndUpdate(session, { isWhatsappLoggedIn: true })
         } catch (error) {
             console.error(`Error updating auth status for ${session}:`, error.message)
         }
     })
 
     // Auth failure event
-    client.on('auth_failure', async(msg) => {
+    client.on('auth_failure', async (msg) => {
         console.error(`${session} authentication failed:`, msg)
         try {
-            await userModel.findByIdAndUpdate(session, {isWhatsappLoggedIn: false, whatsappQr: null})
+            await userModel.findByIdAndUpdate(session, { isWhatsappLoggedIn: false, whatsappQr: null })
         } catch (error) {
             console.error(`Error updating auth failure for ${session}:`, error.message)
         }
     })
 
     // Disconnected event
-    client.on('disconnected', async(reason) => {
+    client.on('disconnected', async (reason) => {
         console.log(`${session} disconnected:`, reason)
-        
+
         try {
-            await userModel.findByIdAndUpdate(session, {isWhatsappLoggedIn: false, whatsappQr: null})
+            await userModel.findByIdAndUpdate(session, { isWhatsappLoggedIn: false, whatsappQr: null })
         } catch (error) {
             console.error(`Error handling disconnection for ${session}:`, error.message)
         }
-        
+
         // Mark client as null to prevent any operations
         cilents[session] = null
-        
+
         // If logged out manually, don't try to reconnect
         if (reason === 'LOGOUT') {
             console.log(`${session} was logged out manually. Client cleaned up.`)
