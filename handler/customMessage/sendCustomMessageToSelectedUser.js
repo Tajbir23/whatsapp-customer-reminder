@@ -11,6 +11,7 @@ const randomDelay = (minSeconds = 3, maxSeconds = 8) => {
 
 const sendCustomMessageToSelectedUser = async (admin, phones, message) => {
 
+    console.log("admin", admin)
     const currentClient = cilents[admin]
 
     const state = await currentClient.getState()
