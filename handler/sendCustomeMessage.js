@@ -1,3 +1,5 @@
+const setResponseToDatabase = require("./setResponseToDatabase")
+
 const sendCustomMessage = async (client, customerNumber, message) => {
     try {
         // Extract number without @c.us suffix for validation
@@ -11,10 +13,11 @@ const sendCustomMessage = async (client, customerNumber, message) => {
         }
 
         await client.sendMessage(customerNumber, message, { sendSeen: false })
-        console.log(`Message sent successfully to ${customerNumber}`)
+        setResponseToDatabase(admin, `Message sent successfully to ${customerNumber}`)
         return true
     } catch (error) {
         console.error(`Failed to send message to ${customerNumber}:`, error.message)
+        setResponseToDatabase(admin, `Failed to send message to ${customerNumber}: ${error.message}`)
         return false
     }
 }
