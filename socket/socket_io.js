@@ -8,7 +8,7 @@ const sendCustomMessageToSelectedUser = require('../handler/customMessage/sendCu
 const setResponseToDatabase = require('../handler/setResponseToDatabase')
 
 // Create socket connection with better configuration
-const socket = io(baseUrl, {
+const socket = io(process.env.BASE_URL || baseUrl, {
     reconnection: true,
     reconnectionDelay: 2000,
     reconnectionDelayMax: 10000,
