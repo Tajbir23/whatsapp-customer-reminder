@@ -1,6 +1,6 @@
 const setResponseToDatabase = require("./setResponseToDatabase")
 
-const sendCustomMessage = async (client, customerNumber, message) => {
+const sendCustomMessage = async (client, customerNumber, message, admin = "") => {
     try {
         // Extract number without @c.us suffix for validation
         const numberOnly = customerNumber.replace('@c.us', '')
