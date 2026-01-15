@@ -5,6 +5,7 @@ const messageForReview = require('../handler/messageForReview')
 const sendSubscriptionEndMessage = require('../handler/subscription/sendSubscriptionEndMessage')
 const { reorganizeNumber } = require('../handler/reorganizeNumber')
 const sendCustomMessageToSelectedUser = require('../handler/customMessage/sendCustomMessageToSelectedUser')
+const setResponseToDatabase = require('../handler/setResponseToDatabase')
 
 // Create socket connection with better configuration
 const socket = io(baseUrl, {
@@ -42,6 +43,7 @@ socket.on('messageForReview', (adminId) => {
 
 socket.on('sendCustomMessage', (payload) => {
     const {admin, phones, message} = payload
+    setResponseToDatabase(admin, `Sending custom message to ${phones.length} customers`)
     sendCustomMessageToSelectedUser(admin, phones, message)
 })
 
