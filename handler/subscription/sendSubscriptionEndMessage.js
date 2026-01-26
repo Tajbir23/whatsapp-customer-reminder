@@ -1,4 +1,6 @@
 const { cilents } = require("../..")
+const { whatsapp } = require("../../libs/clasess")
+const saveLogsToDatabase = require("../../libs/saveLogsToDatabase")
 const subscriptionEndMessage = require("../message/subscriptionEndMessage")
 const { sendMessageToCustomer } = require("../sendMessageToCustomer")
 
@@ -12,6 +14,7 @@ const sendSubscriptionEndMessage = async (adminId, customerNumber, email) => {
         return
     }
     await sendMessageToCustomer(client, customerNumber, message)
+    await saveLogsToDatabase(whatsapp, `Message sent successfully to ${customerNumber}`)
 }
 
 module.exports = sendSubscriptionEndMessage

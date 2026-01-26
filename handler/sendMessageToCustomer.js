@@ -1,3 +1,6 @@
+const { whatsapp } = require("../libs/clasess")
+const saveLogsToDatabase = require("../libs/saveLogsToDatabase")
+
 const sendMessageToCustomer = async (client, customerNumber, message) => {
     try {
         // Check if client exists and is connected
@@ -23,9 +26,11 @@ const sendMessageToCustomer = async (client, customerNumber, message) => {
 
         await client.sendMessage(customerNumber, message, { sendSeen: false })
         console.log(`Message sent successfully to ${customerNumber}`)
+        await saveLogsToDatabase(whatsapp, `Message sent successfully to ${customerNumber}`)
         return true
     } catch (error) {
         console.error(`Failed to send message to ${customerNumber}:`, error.message)
+        await saveLogsToDatabase(whatsapp, `Failed to send message to ${customerNumber}: ${error.message}`)
         return false
     }
 }
