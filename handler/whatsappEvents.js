@@ -2,6 +2,8 @@ const qrcode = require('qrcode-terminal')
 const { userModel } = require('../model/userSchema')
 const { reorganizeNumber } = require('./reorganizeNumber')
 const { setupCronJob } = require('./cronJob')
+const saveLogsToDatabase = require('../libs/saveLogsToDatabase')
+const { whatsapp } = require('../libs/clasess')
 
 // Setup all WhatsApp client events
 const setupWhatsappEvents = (client, session, cilents, admin) => {
@@ -57,10 +59,11 @@ const setupWhatsappEvents = (client, session, cilents, admin) => {
                 
                 _*This is an automated message*_`
                 await client.sendMessage(phoneNumber, confirmMessage, { sendSeen: false })
-                console.log(`Confirmation message sent to ${user.phone}`)
+                await saveLogsToDatabase(whatsapp, `Confirmation message sent to ${user.phone}`)
             }
         } catch (error) {
             console.error(`Error sending confirmation message for ${session}:`, error.message)
+            await saveLogsToDatabase(whatsapp, `Error sending confirmation message for ${session}: ${error.message}`)
             // Don't throw, just log the error
         }
 
