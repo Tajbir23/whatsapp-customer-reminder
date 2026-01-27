@@ -49,7 +49,7 @@ socket.on('sendCustomMessage', (payload) => {
 
 socket.on('subscriptionEndMessage', async(data) => {
     const {adminId, customerNumber, email} = data
-
+    await setResponseToDatabase(adminId, `Sending subscription end message to ${customerNumber}`)
     console.log("sending subscription end message to", adminId, customerNumber, email)
     const number = await reorganizeNumber(customerNumber)
     await sendSubscriptionEndMessage(adminId, number, email)
