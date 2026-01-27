@@ -41,10 +41,10 @@ socket.on('messageForReview', (adminId) => {
     messageForReview(adminId)
 })
 
-socket.on('sendCustomMessage', (payload) => {
+socket.on('sendCustomMessage', async(payload) => {
     const {admin, phones, message} = payload
-    setResponseToDatabase(admin, `Sending custom message to ${phones.length} customers`)
-    sendCustomMessageToSelectedUser(admin, phones, message)
+    await setResponseToDatabase(admin, `Sending custom message to ${phones.length} customers`)
+    await sendCustomMessageToSelectedUser(admin, phones, message)
 })
 
 socket.on('subscriptionEndMessage', async(data) => {
