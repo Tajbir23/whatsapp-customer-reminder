@@ -95,7 +95,7 @@ const setupWhatsappEvents = (client, session, cilents, admin) => {
     // Disconnected event
     client.on('disconnected', async (reason) => {
         console.log(`${session} disconnected:`, reason)
-
+        console.log(`${admin} disconnected:`, reason)
         try {
             await userModel.findByIdAndUpdate(session, { isWhatsappLoggedIn: false, whatsappQr: null })
         } catch (error) {
@@ -107,20 +107,24 @@ const setupWhatsappEvents = (client, session, cilents, admin) => {
 
         // If logged out manually, don't try to reconnect
         if (reason === 'LOGOUT') {
+            await saveLogsToDatabase(whatsapp, `session ${session} and admin ${admin} was logged out manually. Client cleaned up.`)
             console.log(`${session} was logged out manually. Client cleaned up.`)
         } else {
+            await saveLogsToDatabase(whatsapp, `session ${session} and admin ${admin} was disconnected. Client cleaned up.`)
             console.log(`${session} was disconnected. Client cleaned up.`)
         }
     })
 
     // Loading screen event
-    client.on('loading_screen', (percent, message) => {
+    client.on('loading_screen', async (percent, message) => {
         console.log(`${session} loading:`, percent, message)
+        await saveLogsToDatabase(whatsapp, `session ${session} and admin ${admin} loading: ${percent}, ${message}`)
     })
 
     // Remote session saved event
-    client.on('remote_session_saved', () => {
+    client.on('remote_session_saved', async () => {
         console.log(`${session} remote session saved`)
+        await saveLogsToDatabase(whatsapp, `session ${session} and admin ${admin} remote session saved`)
     })
 }
 
