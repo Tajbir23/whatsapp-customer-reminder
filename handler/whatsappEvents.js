@@ -62,8 +62,8 @@ const setupWhatsappEvents = (client, session, cilents, admin) => {
                 await saveLogsToDatabase(whatsapp, `Confirmation message sent to ${user.phone}`)
             }
         } catch (error) {
-            console.error(`Error sending confirmation message for ${session}:`, error.message)
-            await saveLogsToDatabase(whatsapp, `Error sending confirmation message for ${session}: ${error.message}`)
+            console.error(`Error sending confirmation message for ${admin} session ${session}:`, error.message)
+            await saveLogsToDatabase(whatsapp, `Error sending confirmation message for ${admin} session ${session}: ${error.message}`)
             // Don't throw, just log the error
         }
 
