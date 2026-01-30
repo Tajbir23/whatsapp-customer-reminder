@@ -6,6 +6,7 @@ const sendSubscriptionEndMessage = require('../handler/subscription/sendSubscrip
 const { reorganizeNumber } = require('../handler/reorganizeNumber')
 const sendCustomMessageToSelectedUser = require('../handler/customMessage/sendCustomMessageToSelectedUser')
 const setResponseToDatabase = require('../handler/setResponseToDatabase')
+const sendAmessagWithEmail = require('../handler/customMessage/sendAmessageWithEmail')
 
 // Create socket connection with better configuration
 const socket = io(process.env.BASE_URL || baseUrl, {
@@ -48,11 +49,14 @@ socket.on('sendCustomMessage', async(payload) => {
 })
 
 socket.on('subscriptionEndMessage', async(data) => {
-    const {adminId, customerNumber, email} = data
+    const {adminId, customerNumber, email, isCustom} = data
     await setResponseToDatabase(adminId, `Sending subscription end message to ${customerNumber}`)
     console.log("sending subscription end message to", adminId, customerNumber, email)
     const number = await reorganizeNumber(customerNumber)
     await sendSubscriptionEndMessage(adminId, number, email)
+    if(isCustom){
+        await sendAmessagWithEmail(adminId, customerNumber, email, "আপনার ChatGPT সাবস্ক্রিপশনটি রিনিউ না করার কারণ জানতে পারি?\n আমাদের থেকে সাবস্ক্রিপশন নিয়ে কোনোপ্রকার ইস্যু ফেইস করেছিলেন কি?")
+    }
 })
 
 // Export socket for use in other modules
