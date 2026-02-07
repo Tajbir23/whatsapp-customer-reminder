@@ -1,13 +1,14 @@
+require("node:dns/promises").setServers(["1.1.1.1", "8.8.8.8"]);
 const { default: mongoose } = require("mongoose")
 
-const connectDatabase = async() => {
+const connectDatabase = async () => {
     try {
         // Check if already connected
         if (mongoose.connection.readyState === 1) {
             console.log('Already connected to MongoDB')
             return
         }
-        
+
         console.log('Connecting to database...')
         await mongoose.connect(process.env.MONGO_URI)
         console.log('Connected to MongoDB')
