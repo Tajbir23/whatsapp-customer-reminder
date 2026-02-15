@@ -34,10 +34,16 @@ const setupCronJob = (session, cilents, admin) => {
         for (const customerNumber of customerNumbers) {
           const currentClient = cilents[session];
 
+          // WhatsApp client connected আছে কিনা check
+          if (!currentClient) {
+            console.log(`⚠️ WhatsApp client is not connected for session: ${session}. Stopping cron job.`);
+            break;
+          }
+
           // check number valid or not
           if (!customerNumber.whatsapp) {
             console.log(`Customer number is not valid. Skipping message.`);
-            break;
+            continue;
           }
 
           try {
@@ -62,7 +68,7 @@ const setupCronJob = (session, cilents, admin) => {
             await new Promise((resolve) => setTimeout(resolve, delayMs));
           } catch (err) {
             console.error(`Error sending message for ${session}:`, err.message);
-            break;
+            continue;
           }
         }
       } catch (error) {
