@@ -35,7 +35,7 @@ const sendCustomMessageToSelectedUser = async (admin, phones, message) => {
         await sendCustomMessage(currentClient, number, message, admin)
 
         // Random wait after each message to avoid spam detection
-        await randomDelay(3, 8)
+        await randomDelay(50, 100)
     }
 }
 
