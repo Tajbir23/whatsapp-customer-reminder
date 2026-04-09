@@ -14,15 +14,21 @@ const sendCustomMessageToSelectedUser = async (admin, phones, message) => {
     console.log("admin", admin)
     const currentClient = cilents[admin]
 
-    const state = await currentClient.getState()
-
-    if (state !== 'CONNECTED') {
+    if (!currentClient) {
         setResponseToDatabase(admin, "Client is not connected")
         return
     }
 
-    if (!currentClient) {
-        setResponseToDatabase(admin, "Client is not connected")
+    let state
+    try {
+        state = await currentClient.getState()
+    } catch (error) {
+        await setResponseToDatabase(admin, "WhatsApp client is not ready yet. Please try again in a few seconds")
+        return
+    }
+
+    if (state !== 'CONNECTED') {
+        await setResponseToDatabase(admin, `Client is not connected (state: ${state})`)
         return
     }
 
