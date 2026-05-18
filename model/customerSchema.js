@@ -60,6 +60,12 @@ const customerSchema = new Schema({
     },
     paymentMethod: {
         type: String,
+    },
+    plan: {
+        type: String,
+        enum: ['business', 'plus', 'gemini-pro'],
+        default: 'business',
+        index: true
     }
 },{
     timestamps: true

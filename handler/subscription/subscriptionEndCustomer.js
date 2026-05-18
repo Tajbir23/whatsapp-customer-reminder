@@ -27,6 +27,7 @@ const subscriptionEndCustomer = async(adminId) => {
                 { reference: adminId }
             ],
             orderFrom: 'whatsapp',
+            plan: 'business',
             subscriptionEnd: {
                 $gte: twoDaysLater, // 2 দিন পর বা তার পরে
                 $lte: twoDaysLaterEnd // 2 দিন পরের শেষে
