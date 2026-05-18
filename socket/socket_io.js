@@ -49,11 +49,11 @@ socket.on('sendCustomMessage', async(payload) => {
 })
 
 socket.on('subscriptionEndMessage', async(data) => {
-    const {adminId, customerNumber, email, isCustom} = data
+    const {adminId, customerNumber, email, plan, isCustom} = data
     await setResponseToDatabase(adminId, `Sending subscription end message to ${customerNumber}`)
     console.log("sending subscription end message to", adminId, customerNumber, email)
     const number = await reorganizeNumber(customerNumber)
-    await sendSubscriptionEndMessage(adminId, number, email)
+    await sendSubscriptionEndMessage(adminId, number, email, plan)
     if(isCustom){
         await sendAmessagWithEmail(adminId, customerNumber, email, "আপনার ChatGPT সাবস্ক্রিপশনটি রিনিউ না করার কারণ জানতে পারি?\n আমাদের থেকে সাবস্ক্রিপশন নিয়ে কোনোপ্রকার ইস্যু ফেইস করেছিলেন কি?")
     }

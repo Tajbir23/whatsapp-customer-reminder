@@ -5,8 +5,8 @@ const subscriptionEndMessage = require("../message/subscriptionEndMessage")
 const { sendMessageToCustomer } = require("../sendMessageToCustomer")
 
 
-const sendSubscriptionEndMessage = async (adminId, customerNumber, email) => {
-    const message = await subscriptionEndMessage(email)
+const sendSubscriptionEndMessage = async (adminId, customerNumber, email, plan) => {
+    const message = await subscriptionEndMessage(email, plan)
 
     const client = clients[adminId]
     if(!client){

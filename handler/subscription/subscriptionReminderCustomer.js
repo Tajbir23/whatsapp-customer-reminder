@@ -2,7 +2,7 @@ const { customerModel } = require("../../model/customerSchema")
 
 
 
-const subscriptionEndCustomer = async(adminId) => {
+const subscriptionReminderCustomer = async(adminId) => {
     try {
         // Dhaka timezone (UTC+6) এ current date এবং time
         const dhakaTime = new Date().toLocaleString('en-US', { timeZone: 'Asia/Dhaka' })
@@ -27,7 +27,7 @@ const subscriptionEndCustomer = async(adminId) => {
                 { reference: adminId }
             ],
             orderFrom: 'whatsapp',
-            plan: 'business',
+            plan: { $in: ['business', 'plus', 'gemini-pro'] },
             subscriptionEnd: {
                 $gte: twoDaysLater, // 2 দিন পর বা তার পরে
                 $lte: twoDaysLaterEnd // 2 দিন পরের শেষে
@@ -41,4 +41,4 @@ const subscriptionEndCustomer = async(adminId) => {
     }
 }
 
-module.exports = { subscriptionEndCustomer }
+module.exports = { subscriptionReminderCustomer }

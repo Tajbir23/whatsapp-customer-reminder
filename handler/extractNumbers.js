@@ -1,8 +1,10 @@
 const extractNumbers = async(numbers) => {
     try {
-        const customerNumbers = await numbers.map((number) => {
-            return {whatsapp: number.waOrFbId,
-                email: number.email
+        const customerNumbers = numbers.map((number) => {
+            return {
+                whatsapp: number.waOrFbId,
+                email: number.email,
+                plan: number.plan
             }
         })
         return customerNumbers

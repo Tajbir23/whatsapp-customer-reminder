@@ -4,7 +4,7 @@ const { sendMessageToCustomer } = require("../sendMessageToCustomer");
 const subscriptionReminderEndMessage = require("../subscription/subscriptionReminderEndMessage");
 const randomTImeGenerate = require("../randomTimeGenerate");
 const sendInvalidCustomerToAdmin = require("../admin/sendInvalidCustomerToAdmin");
-const { subscriptionEndCustomer } = require("../subscription/subscriptionEndCustomer");
+const { subscriptionReminderCustomer } = require("../subscription/subscriptionReminderCustomer");
 
 const processSubscriptionReminders = async (session, clients, admin) => {
   const dhakaTime = new Date().toLocaleString("en-US", {
@@ -15,7 +15,7 @@ const processSubscriptionReminders = async (session, clients, admin) => {
   );
 
   try {
-    const customers = await subscriptionEndCustomer(session);
+    const customers = await subscriptionReminderCustomer(session);
     console.log(
       `📋 Found ${customers.length} customers with subscription ending in 2 days`
     );
@@ -49,7 +49,8 @@ const processSubscriptionReminders = async (session, clients, admin) => {
         }
         
         const customerMessage = await subscriptionReminderEndMessage(
-          customerNumber.email
+          customerNumber.email,
+          customerNumber.plan
         );
         await sendMessageToCustomer(currentClient, number, customerMessage);
 
