@@ -1,10 +1,10 @@
-const { cilents } = require("../..")
+const { clients } = require("../..")
 const { reorganizeNumber } = require("../reorganizeNumber")
 const sendCustomMessage = require("../sendCustomeMessage")
 const setResponseToDatabase = require("../setResponseToDatabase")
 
 const sendAmessagWithEmail = async (admin, customerNumber, email, message) => {
-    const currentClient = cilents[admin]
+    const currentClient = clients[admin]
     const state = await currentClient.getState()
     if (state !== 'CONNECTED') {
         setResponseToDatabase(admin, "Client is not connected")

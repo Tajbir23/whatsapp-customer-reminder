@@ -1,4 +1,4 @@
-const { cilents } = require("../..")
+const { clients } = require("../..")
 const customMessageLogModel = require("../../model/customMessageLogSchema")
 const { reorganizeNumber } = require("../reorganizeNumber")
 const sendCustomMessage = require("../sendCustomeMessage")
@@ -12,7 +12,7 @@ const randomDelay = (minSeconds = 3, maxSeconds = 8) => {
 const sendCustomMessageToSelectedUser = async (admin, phones, message) => {
 
     console.log("admin", admin)
-    const currentClient = cilents[admin]
+    const currentClient = clients[admin]
 
     const successNumbers = []
     const failedNumbers = []

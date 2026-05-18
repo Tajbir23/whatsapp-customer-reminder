@@ -1,4 +1,4 @@
-const { cilents } = require("../..")
+const { clients } = require("../..")
 const { customerModel } = require("../../model/customerSchema")
 const randomTImeGenerate = require("../randomTimeGenerate")
 const { reorganizeNumber } = require("../reorganizeNumber")
@@ -7,7 +7,7 @@ const remindOldCustomerMessage = require("./remindOldCustomerMessage")
 
 const remindOldCustomers = async (adminId) => {
     try {
-        const currentClient = cilents[adminId]
+        const currentClient = clients[adminId]
         const state = await currentClient.getState()
         if (state !== 'CONNECTED') {
             console.log(`Client ${adminId} is not connected (${state}). Skipping message.`)

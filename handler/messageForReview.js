@@ -1,4 +1,4 @@
-const { cilents } = require("..")
+const { clients } = require("..")
 const sendInvalidCustomerToAdmin = require("./admin/sendInvalidCustomerToAdmin")
 const requestReviewMessage = require("./message/requestReviewMessage")
 const randomTImeGenerate = require("./randomTimeGenerate")
@@ -10,8 +10,8 @@ const messageForReview = async(adminId) => {
     console.log('messageForReview', adminId)
     try {
 
-        console.log("cilents", cilents)
-        const currentClient = cilents[adminId]
+        console.log("clients", clients)
+        const currentClient = clients[adminId]
 
         const state = await currentClient.getState()
 

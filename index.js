@@ -27,7 +27,7 @@ const admins = {
     '687911f899b0bed604926bfc': '8801317989828@c.us'
 }
 // Store all WhatsApp clients
-const cilents = {}
+const clients = {}
 
 // Initialize all WhatsApp clients
 const initializeClients = async () => {
@@ -39,7 +39,7 @@ const initializeClients = async () => {
     for (const session of sessions) {
         const admin = admins[session]
         
-        await initializeSession(session, cilents, admin)
+        await initializeSession(session, clients, admin)
         // Wait a bit between sessions to avoid overwhelming the system
         await new Promise(resolve => setTimeout(resolve, 5000))
     }
@@ -50,7 +50,7 @@ const initializeClients = async () => {
 }
 
 // setTimeout(async () => {
-//     const currentClient = cilents['6879125299b0bed604926bfd']
+//     const currentClient = clients['6879125299b0bed604926bfd']
 //     try {
 //         await currentClient.sendMessage('8801763123739@c.us', "hi")
 //         console.log("message sent")
@@ -66,4 +66,4 @@ initializeClients().catch(error => {
 })
 
 // Export clients for external use
-module.exports = { cilents, admins }
+module.exports = { clients, admins }

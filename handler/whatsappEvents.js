@@ -1,12 +1,12 @@
 const qrcode = require('qrcode-terminal')
 const { userModel } = require('../model/userSchema')
 const { reorganizeNumber } = require('./reorganizeNumber')
-const { setupCronJob } = require('./cronJob')
+const { setupCronJob } = require('./cron/cronJob')
 const saveLogsToDatabase = require('../libs/saveLogsToDatabase')
 const { whatsapp } = require('../libs/clasess')
 
 // Setup all WhatsApp client events
-const setupWhatsappEvents = (client, session, cilents, admin) => {
+const setupWhatsappEvents = (client, session, clients, admin) => {
 
     // QR Code event
     client.on('qr', async (qr) => {
@@ -69,7 +69,7 @@ const setupWhatsappEvents = (client, session, cilents, admin) => {
 
         console.log("setup done whatsapp event")
         // Setup cron job
-        setupCronJob(session, cilents, admin)
+        setupCronJob(session, clients, admin)
     })
 
     // Authenticated event
@@ -103,7 +103,7 @@ const setupWhatsappEvents = (client, session, cilents, admin) => {
         }
 
         // Mark client as null to prevent any operations
-        cilents[session] = null
+        clients[session] = null
 
         // If logged out manually, don't try to reconnect
         if (reason === 'LOGOUT') {
