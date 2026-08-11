@@ -1,16 +1,15 @@
 const setResponseToDatabase = require("./setResponseToDatabase")
+const { resolveWhatsAppId } = require("./resolveWhatsAppId")
 
 const sendCustomMessage = async (client, customerNumber, message, admin = "") => {
     try {
-        const numberOnly = customerNumber.replace('@c.us', '')
-
-        const isRegistered = await client.getNumberId(numberOnly)
-        if (!isRegistered) {
-            console.log(`⚠️ Number ${numberOnly} is not registered on WhatsApp`)
-            return { success: false, reason: 'Not registered on WhatsApp' }
+        const { id, reason } = await resolveWhatsAppId(client, customerNumber)
+        if (!id) {
+            console.log(`⚠️ ${customerNumber}: ${reason}`)
+            return { success: false, reason }
         }
 
-        await client.sendMessage(customerNumber, message, { sendSeen: false })
+        await client.sendMessage(id, message, { sendSeen: false })
         setResponseToDatabase(admin, `Message sent successfully to ${customerNumber}`)
         return { success: true }
     } catch (error) {

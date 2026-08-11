@@ -36,17 +36,26 @@ const initializeClients = async () => {
     await connectDatabase()
 
     // Then initialize WhatsApp clients one by one
+    const failedSessions = []
     for (const session of sessions) {
         const admin = admins[session]
-        
-        await initializeSession(session, clients, admin)
+
+        const client = await initializeSession(session, clients, admin)
+        if (!client) {
+            failedSessions.push(session)
+        }
         // Wait a bit between sessions to avoid overwhelming the system
         await new Promise(resolve => setTimeout(resolve, 5000))
     }
-    
+
     // Setup Socket.IO connection after clients are initialized
     require('./socket/socket_io')
-    console.log('✅ All systems initialized')
+
+    if (failedSessions.length) {
+        console.log(`⚠️ Initialized with ${failedSessions.length} failed session(s): ${failedSessions.join(', ')}`)
+    } else {
+        console.log('✅ All systems initialized')
+    }
 }
 
 // setTimeout(async () => {

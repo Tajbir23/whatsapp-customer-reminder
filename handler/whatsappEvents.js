@@ -1,6 +1,7 @@
 const qrcode = require('qrcode-terminal')
 const { userModel } = require('../model/userSchema')
 const { reorganizeNumber } = require('./reorganizeNumber')
+const { resolveWhatsAppId } = require('./resolveWhatsAppId')
 const { setupCronJob } = require('./cron/cronJob')
 const saveLogsToDatabase = require('../libs/saveLogsToDatabase')
 const { whatsapp } = require('../libs/clasess')
@@ -45,10 +46,10 @@ const setupWhatsappEvents = (client, session, clients, admin) => {
                     return
                 }
 
-                // Check if number is registered on WhatsApp
-                const isRegistered = await client.getNumberId(phoneNumber.replace('@c.us', ''))
-                if (!isRegistered) {
-                    console.log(`⚠️ Phone number ${user.phone} is not registered on WhatsApp`)
+                // LID resolve করে নেওয়া, নইলে নতুন নম্বরে "Lid is missing in chat table" error আসে
+                const { id, reason } = await resolveWhatsAppId(client, phoneNumber)
+                if (!id) {
+                    console.log(`⚠️ Phone number ${user.phone}: ${reason}`)
                     return
                 }
 
@@ -56,9 +57,9 @@ const setupWhatsappEvents = (client, session, clients, admin) => {
                 await new Promise(resolve => setTimeout(resolve, 2000))
 
                 const confirmMessage = `Whatsapp login successful
-                
+
                 _*This is an automated message*_`
-                await client.sendMessage(phoneNumber, confirmMessage, { sendSeen: false })
+                await client.sendMessage(id, confirmMessage, { sendSeen: false })
                 await saveLogsToDatabase(whatsapp, `Confirmation message sent to ${user.phone}`)
             }
         } catch (error) {

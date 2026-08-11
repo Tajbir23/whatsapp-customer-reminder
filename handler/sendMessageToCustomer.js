@@ -1,5 +1,6 @@
 const { whatsapp } = require("../libs/clasess")
 const saveLogsToDatabase = require("../libs/saveLogsToDatabase")
+const { resolveWhatsAppId } = require("./resolveWhatsAppId")
 
 const sendMessageToCustomer = async (client, customerNumber, message) => {
     try {
@@ -14,17 +15,14 @@ const sendMessageToCustomer = async (client, customerNumber, message) => {
             throw new Error(`Client is not connected. Current state: ${state}`)
         }
 
-        // Extract number without @c.us suffix for validation
-        const numberOnly = customerNumber.replace('@c.us', '')
-
-        // Check if number is registered on WhatsApp
-        const isRegistered = await client.getNumberId(numberOnly)
-        if (!isRegistered) {
-            console.log(`⚠️ Number ${numberOnly} is not registered on WhatsApp`)
+        // LID resolve করে নেওয়া, নইলে নতুন নম্বরে "Lid is missing in chat table" error আসে
+        const { id, reason } = await resolveWhatsAppId(client, customerNumber)
+        if (!id) {
+            console.log(`⚠️ ${customerNumber}: ${reason}`)
             return false
         }
 
-        await client.sendMessage(customerNumber, message, { sendSeen: false })
+        await client.sendMessage(id, message, { sendSeen: false })
         console.log(`Message sent successfully to ${customerNumber}`)
         await saveLogsToDatabase(whatsapp, `Message sent successfully to ${customerNumber}`)
         return true
